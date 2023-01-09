@@ -39,7 +39,6 @@ class _CallPageState extends State<CallPage> {
   void dispose() {
     super.dispose();
     _users.clear();
-    _engine.leaveChannel();
   }
 
   Future<void> initialize() async {
@@ -52,12 +51,21 @@ class _CallPageState extends State<CallPage> {
     }
     //for initializing agora
     _engine = createAgoraRtcEngine();
-    await _engine.enableVideo();
-    await _engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
+
+    await _engine.initialize(
+      const RtcEngineContext(
+        appId: appId,
+        channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+      ),
+    );
+
+    _addAgoraEventHandler();
+
     await _engine.setClientRole(role: widget.role!);
+    await _engine.enableVideo();
+    await _engine.startPreview();
 
     //for agora eventhandlers
-    _addAgoraEventHandler();
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     // final cannot modified -- configuration.dimensions = VideoDimensions(height: 1920, width: 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
@@ -83,7 +91,7 @@ class _CallPageState extends State<CallPage> {
 
   void _onJoinChannelSuccess(RtcConnection connection, int elapsed) {
     setState(() {
-      final info = "local user ${connection.localUid} joine.";
+      final info = "local user ${connection.localUid} joined.";
       _infoStrings.add(info);
       _localUserJoined = true;
     });
@@ -130,7 +138,6 @@ class _CallPageState extends State<CallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(_projectString.title),
         actions: [
@@ -177,18 +184,18 @@ class _CallPageState extends State<CallPage> {
           ),
         ),
       );
-
-      final view = list;
-
-      return Column(
-        children: List.generate(
-          view.length,
-          (index) => Expanded(
-            child: view[index],
-          ),
-        ),
-      );
     }
+
+    final view = list;
+
+    return Column(
+      children: List.generate(
+        view.length,
+        (index) => Expanded(
+          child: view[index],
+        ),
+      ),
+    );
   }
 
   Widget _toolBar() {

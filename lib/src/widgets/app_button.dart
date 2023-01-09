@@ -13,7 +13,6 @@ class ProjectRawMaterialButton extends StatefulWidget {
     this.icon,
     this.fillColor,
     this.iconColor,
-    this.iconSize,
   }) : super(key: key);
 
   bool? muted;
@@ -22,7 +21,6 @@ class ProjectRawMaterialButton extends StatefulWidget {
   IconData? icon;
   Color? fillColor;
   Color? iconColor;
-  double? iconSize;
 
   @override
   State<ProjectRawMaterialButton> createState() => _ProjectRawMaterialButtonState();
@@ -55,20 +53,17 @@ class _ProjectRawMaterialButtonState extends State<ProjectRawMaterialButton> {
         widget.fillColor = _muted! ? Colors.blueAccent : Colors.white;
         widget.icon = _muted! ? Icons.mic_off : Icons.mic;
         widget.iconColor = _muted! ? Colors.white : Colors.blueAccent;
-        widget.iconSize = 20;
         break;
 
       case ButtonType.close:
         widget.icon = Icons.call_end;
         widget.iconColor = Colors.white;
-        widget.iconSize = 35;
         widget.fillColor = Colors.redAccent;
         break;
 
       case ButtonType.switchCamera:
         widget.icon = Icons.switch_camera;
         widget.iconColor = Colors.blueAccent;
-        widget.iconSize = 20;
         widget.fillColor = Colors.white;
         break;
 
@@ -77,7 +72,11 @@ class _ProjectRawMaterialButtonState extends State<ProjectRawMaterialButton> {
 
     return RawMaterialButton(
       onPressed: widget.onPressed,
-      child: Icon(widget.icon, color: widget.iconColor, size: widget.iconSize),
+      child: Icon(
+        widget.icon,
+        color: widget.iconColor,
+        size: widget.type == ButtonType.close ? 35 : 20,
+      ),
       shape: const CircleBorder(),
       elevation: 2.0,
       fillColor: widget.fillColor,
