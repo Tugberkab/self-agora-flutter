@@ -65,9 +65,10 @@ class _CallPageState extends State<CallPage> {
     await _engine.enableVideo();
     await _engine.startPreview();
 
-    //for agora eventhandlers
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    // final cannot modified -- configuration.dimensions = VideoDimensions(height: 1920, width: 1080);
+    VideoEncoderConfiguration configuration = const VideoEncoderConfiguration();
+    VideoDimensions? videoConfiguration = configuration.dimensions; // cause its final
+    videoConfiguration = const VideoDimensions(height: 1920, width: 1080);
+
     await _engine.setVideoEncoderConfiguration(configuration);
     await _engine.joinChannel(
       token: token,
