@@ -66,8 +66,6 @@ class _CallPageState extends State<CallPage> {
     await _engine.startPreview();
 
     VideoEncoderConfiguration configuration = const VideoEncoderConfiguration();
-    VideoDimensions? videoConfiguration = configuration.dimensions; // cause its final
-    videoConfiguration = const VideoDimensions(height: 1920, width: 1080);
 
     await _engine.setVideoEncoderConfiguration(configuration);
     await _engine.joinChannel(
